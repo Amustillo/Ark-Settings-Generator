@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+
+# PyInstaller
+source/build/
+source/dist/
+*.spec.backup
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Generated INI files (output)
+Game.ini
+GameUserSettings.ini
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Executable (optional - remove this line if you want to commit the .exe)
+ArkSettingsGenerator.exe
