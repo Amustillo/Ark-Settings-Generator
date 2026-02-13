@@ -743,6 +743,23 @@ class ArkSettingsGenerator:
             }
         }
 
+        # Events data with status indicators
+        self.events_data = {
+            'None': {'status': 'working', 'description': 'No active event'},
+            'WinterWonderland': {'status': 'working', 'description': 'Winter holiday event - cosmetics and bonuses'},
+            'Easter': {'status': 'working', 'description': 'Easter event - egg hunt themes'},
+            'SummerBash': {'status': 'working', 'description': 'Summer event - beach and vacation themes'},
+            'FearEvolved': {'status': 'working', 'description': 'Halloween event - spooky creatures'},
+            'TurkeyTrial': {'status': 'working', 'description': 'Thanksgiving event - turkey challenges'},
+            'LoveEvolved': {'status': 'working', 'description': 'Valentine event - breeding event bonuses'},
+            'WinterWonderland2': {'status': 'working', 'description': 'Winter 2nd year event'},
+            'WinterWonderland3': {'status': 'working', 'description': 'Winter 3rd year event'},
+            'WinterWonderland4': {'status': 'working', 'description': 'Winter 4th year event'},
+            'WinterWonderland5': {'status': 'working', 'description': 'Winter 5th year event'},
+            'WinterWonderland6': {'status': 'working', 'description': 'Winter 6th year event'},
+            'WinterWonderland7': {'status': 'working', 'description': 'Winter 7th year event'},
+        }
+
         # Selected dino variable
         self.selected_dino = tk.StringVar(value='Argentavis')
 
@@ -1281,8 +1298,28 @@ class ArkSettingsGenerator:
                 else:  # string
                     var = tk.StringVar(value=value)
                     if key == 'ActiveEvent':
-                        combo = ttk.Combobox(scrollable_frame, textvariable=var, values=['None', 'WinterWonderland', 'Easter', 'SummerBash', 'FearEvolved', 'TurkeyTrial', 'LoveEvolved', 'WinterWonderland2', 'WinterWonderland3', 'WinterWonderland4', 'WinterWonderland5', 'WinterWonderland6', 'WinterWonderland7'], state='readonly')
-                        combo.grid(row=row, column=1, padx=5, pady=2)
+                        # Format event options with status indicators
+                        event_display_names = []
+                        for event_name in self.events_data.keys():
+                            status = self.events_data[event_name].get('status', 'unknown')
+                            if status == 'working':
+                                display_name = f"✅ {event_name}"
+                            else:
+                                display_name = f"⏰ {event_name} (Coming Soon)"
+                            event_display_names.append(display_name)
+                        
+                        combo = ttk.Combobox(scrollable_frame, values=event_display_names, state='readonly', width=30)
+                        combo.set("✅ None")  # Set default with status indicator
+                        combo.grid(row=row, column=1, columnspan=2, padx=5, pady=2)
+                        
+                        # Handle event selection - extract actual event name
+                        def on_event_select(event_obj):
+                            selected_text = combo.get()
+                            # Remove indicators to get actual event name
+                            event_name = selected_text.replace("✅ ", "").replace("⏰ ", "").replace(" (Coming Soon)", "")
+                            var.set(event_name)
+                        
+                        combo.bind('<<ComboboxSelected>>', on_event_select)
                     else:
                         entry = ttk.Entry(scrollable_frame, textvariable=var, width=15)
                         entry.grid(row=row, column=1, padx=5, pady=2)
