@@ -22,6 +22,11 @@ A modern GUI application to generate `GameUserSettings.ini` and `Game.ini` confi
   - Difficulty offset formulas
   - Performance warnings
   - Multiplier behavior insights
+- **🎉 Server Events**: Easy selection of active events with status indicators
+  - Choose from 18+ available Ark events (Winter Wonderland, Easter, Summer Bash, etc.)
+  - Birthday/Anniversary events and special celebration bonuses
+  - Evolution and Extra Life charity events
+  - Clear ✅ working / ⏰ planned indicators for event availability
 - **📝 Helpful Descriptions**: Each setting includes a brief description of its effects
 - **📑 Tabbed Interface**: Separate tabs for Server Settings, Game Settings, and Mods
 - **⚡ Optimized Performance**: Smooth scrolling and window movement even with many settings
@@ -63,6 +68,24 @@ python main.py
   - **Game Settings**: Breeding, harvesting, day/night cycle, etc.
   - **Mods**: Manage CurseForge mods with easy add/remove/reorder interface
 - **Calculations Panel**: Real-time dino calculations on the right side
+
+### Using Server Events
+
+The **ACTIVE EVENT** dropdown in Server Settings allows you to select from 18+ available Ark events:
+
+**Available Events:**
+- No Event: `None`
+- Winter Events: `WinterWonderland` (1-7 yearly versions)
+- Holiday Events: `Easter` (Eggcellent Adventure), `SummerBash`, `FearEvolved`, `TurkeyTrial`, `LoveEvolved`
+- Birthday/Anniversary: `Birthday` event with celebration bonuses
+- Miscellaneous: `EvolutionEvent`, `ExtraLife`, `ARKaeology`, `ARKdependenceDay`
+
+**How to Use:**
+1. In Server Settings (Basic or Advanced mode), locate the **ACTIVE EVENT** dropdown
+2. Click the dropdown to see all available events with status indicators
+3. ✅ = Currently working and fully supported
+4. ⏰ = Planned/Coming Soon (when applicable)
+5. Select your desired event - the setting will update automatically
 
 ### Using Mod Management
 

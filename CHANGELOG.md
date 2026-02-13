@@ -31,18 +31,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - ⏰ Planned dinos display as "coming soon"
   - Color-coded indicators for user clarity
 - **Server Events Manager**:
-  - ACTIVE EVENT dropdown shows all 13 available events
+  - ACTIVE EVENT dropdown shows all 18 available events
   - ✅ All events currently marked as working
   - Status indicators for user clarity (✅ working, ⏰ planned)
-  - Supported events:
+  - Comprehensive event support:
     - ✅ None (No active event)
     - ✅ WinterWonderland (Winter holiday event with cosmetics)
-    - ✅ Easter (Easter egg hunt themed event)
-    - ✅ SummerBash (Summer vacation themed event)
-    - ✅ FearEvolved (Halloween spooky creatures event)
-    - ✅ TurkeyTrial (Thanksgiving turkey challenges)
-    - ✅ LoveEvolved (Valentine breeding event bonuses)
     - ✅ WinterWonderland2-7 (Multi-year winter events)
+    - ✅ Easter (Eggcellent Adventure - egg hunt themed)
+    - ✅ SummerBash (Summer vacation themed)
+    - ✅ FearEvolved (Halloween spooky creatures themed)
+    - ✅ TurkeyTrial (Thanksgiving event)
+    - ✅ LoveEvolved (Valentine breeding event bonuses)
+    - ✅ Birthday (Anniversary/Birthday celebration bonuses)
+    - ✅ EvolutionEvent (Creature variant spawns)
+    - ✅ ExtraLife (Charity event bonuses)
+    - ✅ ARKaeology (Artifact discovery event)
+    - ✅ ARKdependenceDay (July 4th themed event)
 - **Mod Management System**:
   - Add/remove mods by CurseForge Mod ID
   - Reorder mods (Move Up/Down functionality)

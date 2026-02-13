@@ -747,17 +747,22 @@ class ArkSettingsGenerator:
         self.events_data = {
             'None': {'status': 'working', 'description': 'No active event'},
             'WinterWonderland': {'status': 'working', 'description': 'Winter holiday event - cosmetics and bonuses'},
-            'Easter': {'status': 'working', 'description': 'Easter event - egg hunt themes'},
-            'SummerBash': {'status': 'working', 'description': 'Summer event - beach and vacation themes'},
-            'FearEvolved': {'status': 'working', 'description': 'Halloween event - spooky creatures'},
-            'TurkeyTrial': {'status': 'working', 'description': 'Thanksgiving event - turkey challenges'},
-            'LoveEvolved': {'status': 'working', 'description': 'Valentine event - breeding event bonuses'},
             'WinterWonderland2': {'status': 'working', 'description': 'Winter 2nd year event'},
             'WinterWonderland3': {'status': 'working', 'description': 'Winter 3rd year event'},
             'WinterWonderland4': {'status': 'working', 'description': 'Winter 4th year event'},
             'WinterWonderland5': {'status': 'working', 'description': 'Winter 5th year event'},
             'WinterWonderland6': {'status': 'working', 'description': 'Winter 6th year event'},
             'WinterWonderland7': {'status': 'working', 'description': 'Winter 7th year event'},
+            'Easter': {'status': 'working', 'description': 'Eggcellent Adventure - Easter egg hunt themes'},
+            'SummerBash': {'status': 'working', 'description': 'Summer vacation event - beach themes'},
+            'FearEvolved': {'status': 'working', 'description': 'Fear Evolved/Fear Ascended - Halloween spooky creatures'},
+            'TurkeyTrial': {'status': 'working', 'description': 'Turkey Trial - Thanksgiving event with challenges'},
+            'LoveEvolved': {'status': 'working', 'description': 'Love Evolved - Valentine breeding event bonuses'},
+            'Birthday': {'status': 'working', 'description': 'Birthday/Anniversary event - celebration bonuses'},
+            'EvolutionEvent': {'status': 'working', 'description': 'Evolution Event - creature variant spawns'},
+            'ExtraLife': {'status': 'working', 'description': 'Extra Life event - charity event bonuses'},
+            'ARKaeology': {'status': 'working', 'description': 'ARKaeology - artifact discovery event'},
+            'ARKdependenceDay': {'status': 'working', 'description': 'ARKdependence Day - July 4th themed event'},
         }
 
         # Selected dino variable
@@ -1300,7 +1305,7 @@ class ArkSettingsGenerator:
                     if key == 'ActiveEvent':
                         # Format event options with status indicators
                         event_display_names = []
-                        for event_name in self.events_data.keys():
+                        for event_name in sorted(self.events_data.keys()):
                             status = self.events_data[event_name].get('status', 'unknown')
                             if status == 'working':
                                 display_name = f"✅ {event_name}"
@@ -1308,18 +1313,27 @@ class ArkSettingsGenerator:
                                 display_name = f"⏰ {event_name} (Coming Soon)"
                             event_display_names.append(display_name)
                         
-                        combo = ttk.Combobox(scrollable_frame, values=event_display_names, state='readonly', width=30)
-                        combo.set("✅ None")  # Set default with status indicator
-                        combo.grid(row=row, column=1, columnspan=2, padx=5, pady=2)
+                        combo = ttk.Combobox(scrollable_frame, values=event_display_names, state='readonly', width=35)
+                        combo.grid(row=row, column=1, columnspan=2, padx=5, pady=2, sticky='w')
                         
-                        # Handle event selection - extract actual event name
-                        def on_event_select(event_obj):
-                            selected_text = combo.get()
-                            # Remove indicators to get actual event name
-                            event_name = selected_text.replace("✅ ", "").replace("⏰ ", "").replace(" (Coming Soon)", "")
-                            var.set(event_name)
+                        # Create a closure to capture combo properly
+                        def make_event_handler(c, v):
+                            def on_event_select(event_obj):
+                                selected_text = c.get()
+                                # Remove indicators to get actual event name
+                                event_name = selected_text.replace("✅ ", "").replace("⏰ ", "").replace(" (Coming Soon)", "")
+                                v.set(event_name)
+                            return on_event_select
                         
-                        combo.bind('<<ComboboxSelected>>', on_event_select)
+                        # Set default value based on current value
+                        default_value = "✅ None" if value == 'None' else f"✅ {value}"
+                        if default_value in event_display_names:
+                            combo.set(default_value)
+                        else:
+                            combo.set(event_display_names[0] if event_display_names else "✅ None")
+                        
+                        combo.bind('<<ComboboxSelected>>', make_event_handler(combo, var))
+                        setattr(self, f'server_{key}_combo', combo)
                     else:
                         entry = ttk.Entry(scrollable_frame, textvariable=var, width=15)
                         entry.grid(row=row, column=1, padx=5, pady=2)
