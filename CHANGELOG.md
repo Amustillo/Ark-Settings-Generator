@@ -1,5 +1,7 @@
 # Changelog
 
+Created by **Amustillo** for the Ark: Survival Ascended community
+
 All notable changes to Ark Settings Generator will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),

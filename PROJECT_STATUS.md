@@ -101,3 +101,5 @@ Ark Settings Generator/
 **Status**: ✅ PRODUCTION READY
 **Version**: 1.0.0
 **Date**: February 13, 2026
+**Creator**: Amustillo
+**License**: GPL-3.0 (Non-commercial)

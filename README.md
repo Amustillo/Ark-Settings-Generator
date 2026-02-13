@@ -186,10 +186,18 @@ Contributions are welcome! Please feel free to submit pull requests or open issu
 
 ## License
 
-This project is open source. Feel free to modify and distribute.
+This project is licensed under the GNU General Public License v3.0 (GPL-3.0).
+
+**Important**: This software is provided free of charge and for non-commercial use only. Commercial use, redistribution for profit, or sale of this software is strictly prohibited.
+
+For more details, see the [LICENSE](LICENSE) file.
+
+## Author
+
+**Amustillo** - Creator and maintainer of Ark Settings Generator
 
 ## Acknowledgments
 
-- Built for the Ark: Survival Ascended community
+- Created by Amustillo for the Ark: Survival Ascended community
 - Uses Python 3 with tkinter for cross-platform compatibility
 - Optimized for smooth performance even with 100+ settings
