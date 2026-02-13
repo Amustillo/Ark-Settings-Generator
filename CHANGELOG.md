@@ -13,6 +13,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Initial Release**: Full-featured Ark Survival Ascended settings generator
 - **Dual Modes**: Basic mode for common settings, Advanced mode for full customization
 - **Real-Time Calculations**: Live dino taming, maturation, imprinting, and incubation calculations
+  - Supported Dinos (all with working calculations):
+    - ✅ Argentavis
+    - ✅ Rex
+    - ✅ Spino
+    - ✅ Giga
+    - ✅ Titanosaur
+    - ✅ Megalodon
+    - ✅ Mosasaurus
+    - ✅ Plesiosaur
+    - ✅ Therizino
+    - ✅ Thylacoleo
+  - Dropdown status indicators for working/planned dinos
+- **Dino Calculator Features**:
+  - Dropdown menu shows availability status for each dino
+  - ✅ Working dinos show instant calculations
+  - ⏰ Planned dinos display as "coming soon"
+  - Color-coded indicators for user clarity
 - **Mod Management System**:
   - Add/remove mods by CurseForge Mod ID
   - Reorder mods (Move Up/Down functionality)

@@ -657,7 +657,8 @@ class ArkSettingsGenerator:
                 'imprint_interval': 8,  # hours between imprints
                 'max_imprint': 100,  # max imprint %
                 'incubation_time': 120,  # minutes
-                'mating_cooldown': 18  # hours
+                'mating_cooldown': 18,  # hours
+                'status': 'working'
             },
             'Rex': {
                 'taming_time': 240,
@@ -665,7 +666,8 @@ class ArkSettingsGenerator:
                 'imprint_interval': 8,
                 'max_imprint': 100,
                 'incubation_time': 180,
-                'mating_cooldown': 18
+                'mating_cooldown': 18,
+                'status': 'working'
             },
             'Spino': {
                 'taming_time': 300,
@@ -673,7 +675,8 @@ class ArkSettingsGenerator:
                 'imprint_interval': 8,
                 'max_imprint': 100,
                 'incubation_time': 240,
-                'mating_cooldown': 18
+                'mating_cooldown': 18,
+                'status': 'working'
             },
             'Giga': {
                 'taming_time': 360,
@@ -681,7 +684,8 @@ class ArkSettingsGenerator:
                 'imprint_interval': 8,
                 'max_imprint': 100,
                 'incubation_time': 300,
-                'mating_cooldown': 18
+                'mating_cooldown': 18,
+                'status': 'working'
             },
             'Titanosaur': {
                 'taming_time': 480,
@@ -689,7 +693,8 @@ class ArkSettingsGenerator:
                 'imprint_interval': 12,
                 'max_imprint': 100,
                 'incubation_time': 480,
-                'mating_cooldown': 24
+                'mating_cooldown': 24,
+                'status': 'working'
             },
             'Megalodon': {
                 'taming_time': 120,
@@ -697,7 +702,8 @@ class ArkSettingsGenerator:
                 'imprint_interval': 6,
                 'max_imprint': 100,
                 'incubation_time': 90,
-                'mating_cooldown': 12
+                'mating_cooldown': 12,
+                'status': 'working'
             },
             'Mosasaurus': {
                 'taming_time': 180,
@@ -705,7 +711,8 @@ class ArkSettingsGenerator:
                 'imprint_interval': 8,
                 'max_imprint': 100,
                 'incubation_time': 150,
-                'mating_cooldown': 18
+                'mating_cooldown': 18,
+                'status': 'working'
             },
             'Plesiosaur': {
                 'taming_time': 150,
@@ -713,7 +720,8 @@ class ArkSettingsGenerator:
                 'imprint_interval': 6,
                 'max_imprint': 100,
                 'incubation_time': 120,
-                'mating_cooldown': 15
+                'mating_cooldown': 15,
+                'status': 'working'
             },
             'Therizino': {
                 'taming_time': 210,
@@ -721,7 +729,8 @@ class ArkSettingsGenerator:
                 'imprint_interval': 8,
                 'max_imprint': 100,
                 'incubation_time': 180,
-                'mating_cooldown': 18
+                'mating_cooldown': 18,
+                'status': 'working'
             },
             'Thylacoleo': {
                 'taming_time': 90,
@@ -729,7 +738,8 @@ class ArkSettingsGenerator:
                 'imprint_interval': 6,
                 'max_imprint': 100,
                 'incubation_time': 75,
-                'mating_cooldown': 12
+                'mating_cooldown': 12,
+                'status': 'working'
             }
         }
 
@@ -817,14 +827,34 @@ class ArkSettingsGenerator:
         dino_frame.pack(pady=(0, 15), padx=15, fill='x')
         
         ttk.Label(dino_frame, text="🦖 Select Dino:", style='TLabel').pack(anchor='w', pady=(5, 8))
+        
+        # Format dino options with status indicators
+        dino_display_names = []
+        for dino_name in self.dino_data.keys():
+            status = self.dino_data[dino_name].get('status', 'unknown')
+            if status == 'working':
+                display_name = f"✅ {dino_name}"
+            else:
+                display_name = f"⏰ {dino_name} (Coming Soon)"
+            dino_display_names.append(display_name)
+        
         dino_combo = ttk.Combobox(dino_frame, 
-                                 textvariable=self.selected_dino, 
-                                 values=list(self.dino_data.keys()), 
+                                 values=dino_display_names, 
                                  state='readonly', 
                                  width=20,
                                  font=('Segoe UI', 10))
+        dino_combo.set("✅ Argentavis")  # Set default with status indicator
         dino_combo.pack(fill='x', pady=(0, 5))
-        dino_combo.bind('<<ComboboxSelected>>', lambda e: self.update_calculations())
+        
+        # Handle combobox selection - extract actual dino name and update
+        def on_dino_select(event):
+            selected_text = dino_combo.get()
+            # Extract dino name from the display format
+            dino_name = selected_text.replace("✅ ", "").replace("⏰ ", "").replace(" (Coming Soon)", "")
+            self.selected_dino.set(dino_name)
+            self.update_calculations()
+        
+        dino_combo.bind('<<ComboboxSelected>>', on_dino_select)
 
         # Scrollable calculations frame
         calc_scrollable = ttk.Frame(self.calc_frame, style='Card.TFrame')
