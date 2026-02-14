@@ -32,6 +32,7 @@ A modern GUI application to generate `GameUserSettings.ini` and `Game.ini` confi
 - **⚡ Optimized Performance**: Smooth scrolling and window movement even with many settings
 - **🖱️ Mouse Wheel Support**: Scroll through all settings tabs with your mouse wheel
 - **🎯 Mode-Specific Generation**: Generate INI files with only the settings visible in the current mode
+- **📍 File Location Display**: After generation, view the exact directory path where your INI files are saved
 
 ## Quick Start
 

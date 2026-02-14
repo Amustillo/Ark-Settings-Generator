@@ -7,6 +7,30 @@ All notable changes to Ark Settings Generator will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.3] - 2026-02-13
+
+### Fixed
+- **File Location Display in EXE**: Fixed issue where EXE wasn't showing file paths correctly
+  - Changed from `os.path.abspath()` to `os.getcwd()` for more reliable directory detection
+  - Updated all EXE locations (root, dist, and source/dist)
+  - Now correctly displays working directory and full file paths when running as executable
+
+## [1.0.2] - 2026-02-13
+
+### Fixed
+- **File Location Display**: Improved success message to show complete absolute file paths
+  - Now displays full directory path where INI files are saved
+  - Shows complete paths for both GameUserSettings.ini and Game.ini
+  - Fixed issue where path might not display correctly in certain scenarios
+
+## [1.0.1] - 2026-02-13
+
+### Added
+- **File Location Notification**: Success dialog now displays the full directory path where INI files are saved
+  - Shows complete file path for easy file location
+  - Lists both generated files (GameUserSettings.ini and Game.ini)
+  - Improved user experience for finding generated configuration files
+
 ## [1.0.0] - 2026-02-13
 
 ### Added

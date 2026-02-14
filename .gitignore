@@ -14,7 +14,15 @@ env/
 # PyInstaller
 source/build/
 source/dist/
+build/
+dist/
 *.spec.backup
+
+# Testing
+.pytest_cache/
+.tox/
+.coverage
+htmlcov/
 
 # IDE
 .idea/

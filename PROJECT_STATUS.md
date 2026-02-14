@@ -1,4 +1,4 @@
-# Ark Settings Generator - Project Status v1.0.0
+# Ark Settings Generator - Project Status v1.0.3
 
 ## ✅ Project Cleanup & Organization Complete
 
@@ -20,8 +20,8 @@
 - `tests/` - Test suite
 
 ### Source Folder - VERIFIED
-- `main.py` - Application (1,575+ lines, production-ready with events feature)
-- `version.py` - Version info (v1.0.0)
+- `main.py` - Application (1,598 lines, production-ready with events feature)
+- `version.py` - Version info (v1.0.3)
 - `requirements.txt` - Dependencies (pyinstaller≥6.0)
 - `ArkSettingsGenerator.spec` - PyInstaller configuration
 - `icon.ico` - T-Rex dinosaur icon (multi-resolution)
@@ -46,10 +46,11 @@
 - **Multi-Resolution**: 16x16, 32x32, 64x64, 128x128, 256x256
 - **Status**: Production-ready, embedded in executable
 
-## 🎉 Latest Features (v1.0.0)
+## 🎉 Latest Features (v1.0.3)
+- ✅ **Working File Location Display** - Now correctly shows directory and file paths in EXE (FIXED in v1.0.3)
 - ✅ Real-time dino calculations (10 dinosaurs supported)
 - ✅ Comprehensive mod management system
-- ✅ **18+ Server Events** with status indicators (NEW)
+- ✅ **18+ Server Events** with status indicators
   - Holiday events: Winter Wonderland (1-7), Easter, Summer Bash
   - Special events: FearEvolved, TurkeyTrial, LoveEvolved, Birthday
   - Evolutionary events: EvolutionEvent, ExtraLife, ARKaeology, ARKdependenceDay
@@ -60,7 +61,7 @@
 
 ## 📋 Documentation Status
 - ✅ README.md - Complete with features, usage, tips, and events documentation
-- ✅ CHANGELOG.md - v1.0.0 release notes including all 18 events
+- ✅ CHANGELOG.md - v1.0.3 release notes with EXE file location fix
 - ✅ PROJECT_STATUS.md - This file, current project overview
 - ✅ CONTRIBUTING.md - Development guide
 - ✅ LICENSE - MIT open source
@@ -113,7 +114,7 @@ Ark Settings Generator/
 
 ---
 **Status**: ✅ PRODUCTION READY
-**Version**: 1.0.0
+**Version**: 1.0.3
 **Date**: February 13, 2026
 **Creator**: Amustillo
 **License**: GPL-3.0 (Non-commercial)

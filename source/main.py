@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import os
 import tkinter as tk
 from tkinter import ttk, messagebox
 import configparser
@@ -1554,7 +1555,20 @@ class ArkSettingsGenerator:
                 config2.write(f)
 
             mode_text = "Basic" if current_mode == 'basic' else "Advanced"
-            messagebox.showinfo("Success", f"INI files generated successfully in {mode_text} mode!")
+            # Get the current working directory and absolute paths of the generated files
+            current_dir = os.getcwd()
+            game_user_settings_path = os.path.join(current_dir, 'GameUserSettings.ini')
+            game_ini_path = os.path.join(current_dir, 'Game.ini')
+            
+            messagebox.showinfo("Success", 
+                              f"INI files generated successfully in {mode_text} mode!\n\n"
+                              f"Files saved to:\n{current_dir}\n\n"
+                              f"Generated files:\n"
+                              f"• GameUserSettings.ini\n"
+                              f"• Game.ini\n\n"
+                              f"Full paths:\n"
+                              f"{game_user_settings_path}\n"
+                              f"{game_ini_path}")
         except Exception as e:
             messagebox.showerror("Error", f"Failed to generate INI files: {str(e)}")
 
