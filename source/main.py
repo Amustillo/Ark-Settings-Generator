@@ -2,8 +2,41 @@
 
 import os
 import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import ttk, messagebox, filedialog
 import configparser
+
+class ToolTip:
+    """Create a tooltip for a given widget"""
+    def __init__(self, widget, text):
+        self.widget = widget
+        self.text = text
+        self.tooltip = None
+        self.widget.bind("<Enter>", self.show_tooltip)
+        self.widget.bind("<Leave>", self.hide_tooltip)
+    
+    def show_tooltip(self, event=None):
+        if self.tooltip or not self.text:
+            return
+        x, y, _, _ = self.widget.bbox("insert") if hasattr(self.widget, 'bbox') else (0, 0, 0, 0)
+        x += self.widget.winfo_rootx() + 25
+        y += self.widget.winfo_rooty() + 25
+        
+        self.tooltip = tk.Toplevel(self.widget)
+        self.tooltip.wm_overrideredirect(True)
+        self.tooltip.wm_geometry(f"+{x}+{y}")
+        
+        label = tk.Label(self.tooltip, text=self.text, 
+                        background="#2b2b2b", foreground="#00bfa5",
+                        relief="solid", borderwidth=1,
+                        font=("Segoe UI", 9),
+                        padx=8, pady=6,
+                        wraplength=300)
+        label.pack()
+    
+    def hide_tooltip(self, event=None):
+        if self.tooltip:
+            self.tooltip.destroy()
+            self.tooltip = None
 
 class ArkSettingsGenerator:
     def __init__(self, root):
@@ -103,18 +136,20 @@ class ArkSettingsGenerator:
                        borderwidth=1,
                        relief='flat')
         
-        # Notebook/Tab styles
+        # Notebook/Tab styles - Selected tabs are larger, unselected are smaller
         style.configure('TNotebook', 
                        background=self.colors['bg_dark'],
                        borderwidth=0)
         style.configure('TNotebook.Tab', 
-                       font=('Segoe UI', 11, 'bold'), 
-                       padding=[15, 8], 
+                       font=('Segoe UI', 9), 
+                       padding=[10, 5], 
                        background=self.colors['bg_medium'], 
                        foreground=self.colors['text_secondary'])
         style.map('TNotebook.Tab',
                  background=[('selected', self.colors['accent'])],
-                 foreground=[('selected', 'white')])
+                 foreground=[('selected', 'white')],
+                 font=[('selected', ('Segoe UI', 13, 'bold'))],
+                 padding=[('selected', [20, 10])])
         
         # Frame styles
         style.configure('TFrame', background=self.colors['bg_dark'])
@@ -818,13 +853,19 @@ class ArkSettingsGenerator:
         self.generate_btn = ttk.Button(button_frame, 
                                        text="💾 Generate INI Files", 
                                        command=self.generate_files,
-                                       width=25)
+                                       width=22)
         self.generate_btn.pack(side=tk.LEFT, padx=10)
+        
+        self.import_btn = ttk.Button(button_frame, 
+                                     text="📂 Import INI Files", 
+                                     command=self.import_ini_files,
+                                     width=22)
+        self.import_btn.pack(side=tk.LEFT, padx=10)
         
         self.reset_btn = ttk.Button(button_frame, 
                                     text="🔄 Reset to Defaults", 
                                     command=self.reset_to_defaults,
-                                    width=25)
+                                    width=22)
         self.reset_btn.pack(side=tk.LEFT, padx=10)
 
         # Main content area with notebook and calculations
@@ -1038,6 +1079,127 @@ class ArkSettingsGenerator:
             widget.destroy()
         self.populate_tabs()
 
+    def format_slider_value(self, value):
+        """Format slider value to show thousands decimal (e.g., 1.000)"""
+        try:
+            return f"{float(value):.3f}"
+        except:
+            return "0.000"
+    
+    def validate_numeric_only(self, P):
+        """Validate that input is numeric only"""
+        if P == "":
+            return True
+        try:
+            float(P)
+            return True
+        except ValueError:
+            return False
+    
+    def import_ini_files(self):
+        """Import existing INI files to populate settings"""
+        # Ask user to select GameUserSettings.ini
+        game_user_path = filedialog.askopenfilename(
+            title="Select GameUserSettings.ini",
+            filetypes=[("INI files", "*.ini"), ("All files", "*.*")]
+        )
+        
+        if not game_user_path:
+            return
+        
+        # Ask user to select Game.ini
+        game_path = filedialog.askopenfilename(
+            title="Select Game.ini",
+            filetypes=[("INI files", "*.ini"), ("All files", "*.*")]
+        )
+        
+        if not game_path:
+            return
+        
+        try:
+            # Parse GameUserSettings.ini
+            config1 = configparser.ConfigParser()
+            config1.read(game_user_path)
+            
+            if 'ServerSettings' in config1:
+                for key, value in config1['ServerSettings'].items():
+                    if key in self.settings['ServerSettings']:
+                        # Convert to appropriate type
+                        default_value = self.settings['ServerSettings'][key]
+                        if isinstance(default_value, bool):
+                            self.settings['ServerSettings'][key] = value.lower() in ['true', '1', 'yes']
+                        elif isinstance(default_value, int):
+                            try:
+                                self.settings['ServerSettings'][key] = int(value)
+                            except:
+                                pass
+                        elif isinstance(default_value, float):
+                            try:
+                                self.settings['ServerSettings'][key] = float(value)
+                            except:
+                                pass
+                        else:
+                            self.settings['ServerSettings'][key] = value
+            
+            # Parse Game.ini
+            config2 = configparser.ConfigParser()
+            config2.read(game_path)
+            
+            if '/script/shootergame.shootergamemode' in config2:
+                for key, value in config2['/script/shootergame.shootergamemode'].items():
+                    if key in self.settings['/script/shootergame.shootergamemode']:
+                        # Convert to appropriate type
+                        default_value = self.settings['/script/shootergame.shootergamemode'][key]
+                        if isinstance(default_value, bool):
+                            self.settings['/script/shootergame.shootergamemode'][key] = value.lower() in ['true', '1', 'yes']
+                        elif isinstance(default_value, int):
+                            try:
+                                self.settings['/script/shootergame.shootergamemode'][key] = int(value)
+                            except:
+                                pass
+                        elif isinstance(default_value, float):
+                            try:
+                                self.settings['/script/shootergame.shootergamemode'][key] = float(value)
+                            except:
+                                pass
+                        else:
+                            self.settings['/script/shootergame.shootergamemode'][key] = value
+            
+            # Update GUI with imported values
+            for section, settings in self.settings.items():
+                prefix = 'server_' if section == 'ServerSettings' else 'game_'
+                for key, value in settings.items():
+                    var_name = f'{prefix}{key}'
+                    if hasattr(self, var_name):
+                        var = getattr(self, var_name)
+                        if hasattr(var, 'set'):
+                            var.set(value)
+            
+            # Load mods if present
+            if hasattr(self, 'mods_listbox'):
+                self.load_mods_to_listbox()
+            
+            messagebox.showinfo("Success", "INI files imported successfully!")
+            
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to import INI files: {str(e)}")
+    
+    def show_mod_context_menu(self, event):
+        """Show right-click context menu for mod entry"""
+        try:
+            self.mod_context_menu.tk_popup(event.x_root, event.y_root)
+        finally:
+            self.mod_context_menu.grab_release()
+    
+    def paste_to_mod_entry(self):
+        """Paste clipboard content to mod entry field"""
+        try:
+            clipboard_content = self.root.clipboard_get()
+            self.mod_id_entry.delete(0, tk.END)
+            self.mod_id_entry.insert(0, clipboard_content.strip())
+        except:
+            pass
+
     def populate_tabs(self):
         self.create_server_settings()
         self.create_game_settings()
@@ -1097,6 +1259,11 @@ class ArkSettingsGenerator:
         self.mod_id_entry = ttk.Entry(add_frame, width=30)
         self.mod_id_entry.pack(side=tk.LEFT, padx=(0, 10))
         self.mod_id_entry.bind('<Return>', lambda e: self.add_mod())
+        
+        # Add right-click paste functionality
+        self.mod_context_menu = tk.Menu(self.mod_id_entry, tearoff=0)
+        self.mod_context_menu.add_command(label="Paste", command=self.paste_to_mod_entry)
+        self.mod_id_entry.bind("<Button-3>", self.show_mod_context_menu)
         
         add_btn = ttk.Button(add_frame, text="➕ Add Mod", command=self.add_mod, width=15)
         add_btn.pack(side=tk.LEFT)
@@ -1251,16 +1418,20 @@ class ArkSettingsGenerator:
         row = 0
         for key in settings_to_show:
             if key in self.descriptions:
-                # Setting name with modern styling
+                # Setting name with modern styling and tooltip
                 label = tk.Label(scrollable_frame, 
-                                text=key, 
+                                text=f"ℹ️ {key}", 
                                 font=('Segoe UI', 10, 'bold'),
                                 fg=self.colors['text_primary'],
-                                bg=self.colors['bg_dark'])
+                                bg=self.colors['bg_dark'],
+                                cursor='hand2')
                 label.grid(row=row, column=0, sticky='w', padx=10, pady=(15, 5))
                 
-                # Description with better visibility
+                # Add tooltip to label
                 desc = self.descriptions.get(key, '')
+                ToolTip(label, desc)
+                
+                # Description with better visibility
                 desc_label = tk.Label(scrollable_frame, 
                                      text=desc, 
                                      font=('Segoe UI', 9),
@@ -1277,29 +1448,58 @@ class ArkSettingsGenerator:
                     setattr(self, f'server_{key}', var)
                 elif isinstance(value, int):
                     var = tk.IntVar(value=value)
-                    spin = ttk.Spinbox(scrollable_frame, from_=0, to=100000, textvariable=var, width=10)
+                    # Add numeric validation
+                    vcmd = (scrollable_frame.register(self.validate_numeric_only), '%P')
+                    spin = ttk.Spinbox(scrollable_frame, from_=0, to=100000, textvariable=var, width=10,
+                                      validate='key', validatecommand=vcmd)
                     spin.grid(row=row, column=1, padx=5, pady=2)
                     setattr(self, f'server_{key}', var)
                 elif isinstance(value, float):
                     var = tk.DoubleVar(value=value)
+                    # Create StringVar for formatted display in label
+                    display_var = tk.StringVar(value=self.format_slider_value(value))
+                    # Create StringVar for formatted display in entry
+                    entry_display_var = tk.StringVar(value=self.format_slider_value(value))
+                    
                     # Determine if this key needs calculation updates
                     needs_calc_update = key in ['DifficultyOffset', 'TamingSpeedMultiplier', 'OverrideOfficialDifficulty']
                     
-                    if needs_calc_update:
-                        scale_cmd = lambda val: self.update_calculations()
-                    else:
-                        scale_cmd = None
+                    def update_display(val, var=var, display_var=display_var, entry_var=entry_display_var, needs_calc=needs_calc_update):
+                        formatted = self.format_slider_value(var.get())
+                        display_var.set(formatted)
+                        entry_var.set(formatted)
+                        if needs_calc:
+                            self.update_calculations()
                     
                     scale = ttk.Scale(scrollable_frame, from_=0.0, to=10.0, variable=var, orient='horizontal',
-                                     command=scale_cmd)
+                                     command=lambda val, v=var, d=display_var, e=entry_display_var, n=needs_calc_update: update_display(val, v, d, e, n))
                     scale.grid(row=row, column=1, padx=5, pady=2)
-                    label = ttk.Label(scrollable_frame, textvariable=var, width=5)
-                    label.grid(row=row, column=2, padx=5, pady=2)
-                    entry = ttk.Entry(scrollable_frame, textvariable=var, width=10)
+                    
+                    # Display label with formatted thousands
+                    display_label = ttk.Label(scrollable_frame, textvariable=display_var, width=8)
+                    display_label.grid(row=row, column=2, padx=5, pady=2)
+                    
+                    # Entry with formatted display
+                    vcmd = (scrollable_frame.register(self.validate_numeric_only), '%P')
+                    entry = ttk.Entry(scrollable_frame, textvariable=entry_display_var, width=10,
+                                     validate='key', validatecommand=vcmd)
                     entry.grid(row=row, column=3, padx=5, pady=2)
-                    # Bind entry changes for real-time updates
-                    if needs_calc_update:
-                        entry.bind('<KeyRelease>', lambda e: self.update_calculations())
+                    
+                    # Update actual var and displays when entry changes
+                    def on_entry_change(event, var=var, display_var=display_var, entry_var=entry_display_var, needs_calc=needs_calc_update):
+                        try:
+                            value_str = entry_var.get()
+                            if value_str:
+                                value_float = float(value_str)
+                                var.set(value_float)
+                                formatted = self.format_slider_value(value_float)
+                                display_var.set(formatted)
+                                if needs_calc:
+                                    self.update_calculations()
+                        except:
+                            pass
+                    
+                    entry.bind('<KeyRelease>', on_entry_change)
                     setattr(self, f'server_{key}', var)
                 else:  # string
                     var = tk.StringVar(value=value)
@@ -1405,9 +1605,29 @@ class ArkSettingsGenerator:
         row = 0
         for key in settings_to_show:
             if key in self.descriptions:
-                ttk.Label(scrollable_frame, text=key, font=('Arial', 9, 'bold')).grid(row=row, column=0, sticky='w', padx=5, pady=2)
+                # Setting name with tooltip
+                label = tk.Label(scrollable_frame, 
+                                text=f"ℹ️ {key}", 
+                                font=('Segoe UI', 10, 'bold'),
+                                fg=self.colors['text_primary'],
+                                bg=self.colors['bg_dark'],
+                                cursor='hand2')
+                label.grid(row=row, column=0, sticky='w', padx=10, pady=(15, 5))
+                
+                # Add tooltip
                 desc = self.descriptions.get(key, '')
-                ttk.Label(scrollable_frame, text=desc, font=('Arial', 8), foreground='gray').grid(row=row+1, column=0, columnspan=4, sticky='w', padx=5, pady=1)
+                ToolTip(label, desc)
+                
+                # Description
+                desc_label = tk.Label(scrollable_frame, 
+                                     text=desc, 
+                                     font=('Segoe UI', 9),
+                                     fg=self.colors['text_secondary'],
+                                     bg=self.colors['bg_dark'],
+                                     wraplength=500,
+                                     justify='left')
+                desc_label.grid(row=row+1, column=0, columnspan=4, sticky='w', padx=10, pady=(0, 5))
+                
                 value = self.settings['/script/shootergame.shootergamemode'].get(key, 0)
                 if isinstance(value, bool):
                     var = tk.BooleanVar(value=value)
@@ -1416,33 +1636,63 @@ class ArkSettingsGenerator:
                     setattr(self, f'game_{key}', var)
                 elif isinstance(value, int):
                     var = tk.IntVar(value=value)
-                    spin = ttk.Spinbox(scrollable_frame, from_=0, to=100000, textvariable=var, width=10)
+                    # Add numeric validation
+                    vcmd = (scrollable_frame.register(self.validate_numeric_only), '%P')
+                    spin = ttk.Spinbox(scrollable_frame, from_=0, to=100000, textvariable=var, width=10,
+                                      validate='key', validatecommand=vcmd)
                     spin.grid(row=row, column=1, padx=5, pady=2)
                     setattr(self, f'game_{key}', var)
                 elif isinstance(value, float):
                     var = tk.DoubleVar(value=value)
+                    # Create StringVar for formatted display in label
+                    display_var = tk.StringVar(value=self.format_slider_value(value))
+                    # Create StringVar for formatted display in entry
+                    entry_display_var = tk.StringVar(value=self.format_slider_value(value))
+                    
                     # Determine if this key needs calculation updates
                     needs_calc_update = key in ['BabyMatureSpeedMultiplier', 'BabyImprintingStatScaleMultiplier', 
                                                'EggHatchSpeedMultiplier', 'MatingIntervalMultiplier']
                     
-                    if needs_calc_update:
-                        scale_cmd = lambda val: self.update_calculations()
-                    else:
-                        scale_cmd = None
+                    def update_display(val, var=var, display_var=display_var, entry_var=entry_display_var, needs_calc=needs_calc_update):
+                        formatted = self.format_slider_value(var.get())
+                        display_var.set(formatted)
+                        entry_var.set(formatted)
+                        if needs_calc:
+                            self.update_calculations()
                     
                     scale = ttk.Scale(scrollable_frame, from_=0.0, to=10.0, variable=var, orient='horizontal',
-                                     command=scale_cmd)
+                                     command=lambda val, v=var, d=display_var, e=entry_display_var, n=needs_calc_update: update_display(val, v, d, e, n))
                     scale.grid(row=row, column=1, padx=5, pady=2)
-                    label = ttk.Label(scrollable_frame, textvariable=var, width=5)
-                    label.grid(row=row, column=2, padx=5, pady=2)
-                    entry = ttk.Entry(scrollable_frame, textvariable=var, width=10)
+                    
+                    # Display label with formatted thousands
+                    display_label = ttk.Label(scrollable_frame, textvariable=display_var, width=8)
+                    display_label.grid(row=row, column=2, padx=5, pady=2)
+                    
+                    # Entry with formatted display
+                    vcmd = (scrollable_frame.register(self.validate_numeric_only), '%P')
+                    entry = ttk.Entry(scrollable_frame, textvariable=entry_display_var, width=10,
+                                     validate='key', validatecommand=vcmd)
                     entry.grid(row=row, column=3, padx=5, pady=2)
-                    # Bind entry changes for real-time updates
-                    if needs_calc_update:
-                        entry.bind('<KeyRelease>', lambda e: self.update_calculations())
+                    
+                    # Update actual var and displays when entry changes
+                    def on_entry_change(event, var=var, display_var=display_var, entry_var=entry_display_var, needs_calc=needs_calc_update):
+                        try:
+                            value_str = entry_var.get()
+                            if value_str:
+                                value_float = float(value_str)
+                                var.set(value_float)
+                                formatted = self.format_slider_value(value_float)
+                                display_var.set(formatted)
+                                if needs_calc:
+                                    self.update_calculations()
+                        except:
+                            pass
+                    
+                    entry.bind('<KeyRelease>', on_entry_change)
                     setattr(self, f'game_{key}', var)
                 else:  # string
                     var = tk.StringVar(value=value)
+                    # Add numeric validation for string fields that represent numbers
                     entry = ttk.Entry(scrollable_frame, textvariable=var, width=15)
                     entry.grid(row=row, column=1, padx=5, pady=2)
                     setattr(self, f'game_{key}', var)

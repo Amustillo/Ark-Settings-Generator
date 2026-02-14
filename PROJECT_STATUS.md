@@ -1,4 +1,4 @@
-# Ark Settings Generator - Project Status v1.0.3
+# Ark Settings Generator - Project Status v1.1.0
 
 ## ✅ Project Cleanup & Organization Complete
 
@@ -20,8 +20,8 @@
 - `tests/` - Test suite
 
 ### Source Folder - VERIFIED
-- `main.py` - Application (1,598 lines, production-ready with events feature)
-- `version.py` - Version info (v1.0.3)
+- `main.py` - Application (1,789 lines, production-ready with v1.1.0 features)
+- `version.py` - Version info (v1.1.0)
 - `requirements.txt` - Dependencies (pyinstaller≥6.0)
 - `ArkSettingsGenerator.spec` - PyInstaller configuration
 - `icon.ico` - T-Rex dinosaur icon (multi-resolution)
@@ -35,8 +35,8 @@
 - ✅ Build artifacts cleaned (build/, dist/, create_icon.py removed)
 - ✅ Source code optimized and documented
 - ✅ .gitignore properly configured
-- ✅ README.md updated with events documentation
-- ✅ CHANGELOG.md updated with complete events list
+- ✅ README.md updated with v1.1.0 features
+- ✅ CHANGELOG.md updated with complete feature list
 - ✅ Ready for GitHub upload (final state)
 
 ## 🎨 Icon System
@@ -46,8 +46,16 @@
 - **Multi-Resolution**: 16x16, 32x32, 64x64, 128x128, 256x256
 - **Status**: Production-ready, embedded in executable
 
-## 🎉 Latest Features (v1.0.3)
-- ✅ **Working File Location Display** - Now correctly shows directory and file paths in EXE (FIXED in v1.0.3)
+## 🎉 Latest Features (v1.1.0)
+- ✅ **Enhanced Tab Interface** - Selected tabs larger (font 13), unselected smaller (font 9)
+- ✅ **Decimal Thousands Display** - All sliders AND entry boxes show 3-decimal precision (e.g., "1.000")
+  - Slider labels display formatted values
+  - Entry boxes display formatted values and accept manual input
+  - Both stay synchronized automatically
+- ✅ **Numeric-Only Validation** - All numeric fields enforce number-only input
+- ✅ **INI Import Feature** - Upload existing INI files to populate settings automatically
+- ✅ **Interactive Tooltips** - Hover over ℹ️ icons to see detailed setting descriptions
+- ✅ **Right-Click Paste** - Quick mod entry with right-click paste in mod field
 - ✅ Real-time dino calculations (10 dinosaurs supported)
 - ✅ Comprehensive mod management system
 - ✅ **18+ Server Events** with status indicators
@@ -114,7 +122,7 @@ Ark Settings Generator/
 
 ---
 **Status**: ✅ PRODUCTION READY
-**Version**: 1.0.3
+**Version**: 1.1.0
 **Date**: February 13, 2026
 **Creator**: Amustillo
 **License**: GPL-3.0 (Non-commercial)

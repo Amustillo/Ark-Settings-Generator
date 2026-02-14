@@ -2,7 +2,7 @@
 Version information for Ark Settings Generator
 """
 
-__version__ = "1.0.3"
+__version__ = "1.1.0"
 __author__ = "Amustillo"
 __description__ = "A modern GUI application to generate Ark Survival Ascended server configuration files"
 __license__ = "GPL-3.0"

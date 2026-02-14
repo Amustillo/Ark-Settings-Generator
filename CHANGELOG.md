@@ -7,6 +7,34 @@ All notable changes to Ark Settings Generator will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-02-13
+
+### Added
+- **Enhanced Tab Interface**: Selected tabs are now visually larger (font size 13, padding 20x10) while unselected tabs are smaller (font size 9, padding 10x5) for better visual hierarchy
+- **Decimal Thousands Display**: All slider values and entry boxes now display in 3-decimal format (e.g., "1.000" instead of "1.0") for precision
+  - Slider labels show formatted values
+  - Entry boxes show formatted values and accept manual input
+  - Both stay synchronized when either is changed
+- **Numeric-Only Validation**: All numeric entry fields now enforce number-only input, preventing text entry errors
+- **INI File Import**: New "Import INI Files" button allows uploading existing GameUserSettings.ini and Game.ini files to populate settings automatically
+- **Interactive Tooltips**: Hover over any setting label (marked with ℹ️ icon) to see a tooltip with the full description
+- **Right-Click Paste for Mods**: Right-click in the mod entry field to quickly paste mod codes from clipboard
+
+### Changed
+- Setting labels now display with ℹ️ icon to indicate tooltip availability
+- Entry boxes now maintain decimal thousands formatting for consistency
+- Improved user experience with visual feedback throughout the interface
+- Enhanced accessibility with validation preventing invalid inputs
+
+### Technical
+- Added `ToolTip` class for dynamic tooltip rendering
+- Added `format_slider_value()` method for consistent decimal formatting across sliders and entry boxes
+- Added `validate_numeric_only()` method for input validation
+- Added `import_ini_files()` method for configuration import
+- Added `show_mod_context_menu()` and `paste_to_mod_entry()` for right-click functionality
+- Updated tab styling to support dynamic sizing based on selection state
+- Implemented dual StringVar system for synchronized display between slider labels and entry boxes
+
 ## [1.0.3] - 2026-02-13
 
 ### Fixed

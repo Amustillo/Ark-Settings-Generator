@@ -18,6 +18,11 @@ A modern GUI application to generate `GameUserSettings.ini` and `Game.ini` confi
   - Reorder mods with Move Up/Down buttons
   - Built-in instructions for finding mod IDs
   - Mods persist across mode switches
+  - Right-click paste support for quick mod entry
+- **📂 INI Import**: Upload existing INI files to automatically populate all settings
+  - Import GameUserSettings.ini and Game.ini
+  - Automatically converts and applies all settings
+  - Preserves existing server configurations
 - **💡 Advanced Tips**: Displays useful server configuration tips most players don't know about
   - Difficulty offset formulas
   - Performance warnings
@@ -27,8 +32,19 @@ A modern GUI application to generate `GameUserSettings.ini` and `Game.ini` confi
   - Birthday/Anniversary events and special celebration bonuses
   - Evolution and Extra Life charity events
   - Clear ✅ working / ⏰ planned indicators for event availability
+- **ℹ️ Interactive Tooltips**: Hover over any setting label to see detailed descriptions
+  - Quick reference without scrolling
+  - Professional tooltip styling
+  - Available on all settings
+- **🔢 Precision Controls**: Slider values and entry boxes display in decimal thousands format (e.g., 1.000)
+  - Enhanced precision for fine-tuning
+  - Real-time formatted display in both sliders and entry boxes
+  - Both controls stay synchronized when either is changed
+  - Numeric-only validation prevents input errors
 - **📝 Helpful Descriptions**: Each setting includes a brief description of its effects
 - **📑 Tabbed Interface**: Separate tabs for Server Settings, Game Settings, and Mods
+  - Selected tabs are larger for better visibility
+  - Unselected tabs are compact to save space
 - **⚡ Optimized Performance**: Smooth scrolling and window movement even with many settings
 - **🖱️ Mouse Wheel Support**: Scroll through all settings tabs with your mouse wheel
 - **🎯 Mode-Specific Generation**: Generate INI files with only the settings visible in the current mode
@@ -40,8 +56,9 @@ A modern GUI application to generate `GameUserSettings.ini` and `Game.ini` confi
 2. **Run**: Double-click `ArkSettingsGenerator.exe` (or run from source)
 3. **Configure**: 
    - Select Basic or Advanced mode
-   - Adjust server and game settings
-   - Add mods in the Mods tab (optional)
+   - Adjust server and game settings (hover over ℹ️ icons for tooltips)
+   - Add mods in the Mods tab (optional) - use right-click to paste mod IDs
+   - Or import existing INI files to load your current configuration
 4. **Generate**: Click "Generate INI Files" to create your config files
 5. **Deploy**: Copy the generated `Game.ini` and `GameUserSettings.ini` to your Ark server's configuration folder
 
@@ -63,12 +80,33 @@ python main.py
 ### Interface Overview
 
 - **Mode Selection**: Choose between Basic (common settings) or Advanced (all settings) at the top
-- **Control Buttons**: Generate INI files or reset to defaults (visible at top)
+- **Control Buttons**: 
+  - **Generate INI Files**: Create config files from your settings
+  - **Import INI Files**: Upload existing config files to populate settings
+  - **Reset to Defaults**: Clear all settings back to default values
 - **Settings Tabs**: 
   - **Server Settings**: Server name, passwords, difficulty, multipliers, etc.
   - **Game Settings**: Breeding, harvesting, day/night cycle, etc.
   - **Mods**: Manage CurseForge mods with easy add/remove/reorder interface
+- **Interactive Elements**:
+  - **Tooltips**: Hover over any setting label (marked with ℹ️) for detailed descriptions
+  - **Slider Precision**: All sliders display values in decimal thousands (e.g., 1.000)
+  - **Input Validation**: Numeric fields only accept number values
+  - **Right-Click Paste**: Right-click in mod entry field to paste mod IDs
 - **Calculations Panel**: Real-time dino calculations on the right side
+
+### Importing Existing Configuration
+
+To import your existing server settings:
+
+1. Click the **"📂 Import INI Files"** button at the top
+2. Select your existing **GameUserSettings.ini** file
+3. Select your existing **Game.ini** file
+4. All settings will automatically populate in the interface
+5. Make any additional changes as needed
+6. Generate updated INI files
+
+**Note**: The import feature intelligently converts all setting types (booleans, integers, floats, strings) and preserves your existing mod list.
 
 ### Using Server Events
 
@@ -93,9 +131,12 @@ The **ACTIVE EVENT** dropdown in Server Settings allows you to select from 18+ a
 1. Navigate to the **Mods** tab
 2. Find your desired mod on [CurseForge](https://www.curseforge.com/ark-survival-ascended/mods)
 3. Copy the Mod ID from the URL (e.g., `curseforge.com/.../mods/12345` → ID is `12345`)
-4. Enter the Mod ID in the "Add Mod" field and click "Add Mod"
-5. Use Move Up/Down buttons to reorder mods (load order matters!)
-6. Mods are automatically included in generated INI files
+4. Enter the Mod ID in the "Add Mod" field (or right-click to paste from clipboard)
+5. Press Enter or click "Add Mod"
+6. Use Move Up/Down buttons to reorder mods (load order matters!)
+7. Mods are automatically included in generated INI files
+
+**Pro Tip**: Right-click in the mod entry field and select "Paste" to quickly add mod IDs from your clipboard.
 
 ### Mode Differences
 
