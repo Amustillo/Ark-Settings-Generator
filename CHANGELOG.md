@@ -7,6 +7,24 @@ All notable changes to Ark Settings Generator will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2026-08-18
+
+### Added
+- Application-level regression coverage for INI generation, import, reset, validation, and calculation safeguards
+
+### Changed
+- Release workflow now builds the executable into the project root for easier distribution
+- README, contributing guidance, and project status now reflect the current GPL-3.0 release configuration
+
+### Fixed
+- Hardened INI import for Ark files with duplicate options and literal percent values
+- Invalid imported numeric and boolean values are now skipped with a warning
+- Import flow now clearly labels the required file order and rejects reversed files
+- Zero and negative calculation multipliers no longer crash the application
+- Imports reset omitted settings to defaults instead of retaining stale session values
+- Standardized executable output to the project root
+- Removed generated build artifacts and caches from the release workspace
+
 ## [1.1.0] - 2026-02-13
 
 ### Added
@@ -140,24 +158,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PyInstaller support for standalone executable
 - GPL-3.0 License
 - Comprehensive README documentation
-
-## [1.1.1] - 2026-08-18
-
-### Added
-- Application-level regression coverage for INI generation, import, reset, validation, and calculation safeguards
-
-### Changed
-- Release workflow now builds the executable into the project root for easier distribution
-- README, contributing guidance, and project status now reflect the current GPL-3.0 release configuration
-
-### Fixed
-- Hardened INI import for Ark files with duplicate options and literal percent values
-- Invalid imported numeric and boolean values are now skipped with a warning
-- Import flow now clearly labels the required file order and rejects reversed files
-- Zero and negative calculation multipliers no longer crash the application
-- Imports reset omitted settings to defaults instead of retaining stale session values
-- Standardized executable output to the project root
-- Removed generated build artifacts and caches from the release workspace
 
 ## Planned Features
 - Profile saving/loading
