@@ -141,14 +141,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GPL-3.0 License
 - Comprehensive README documentation
 
-## [Unreleased]
+## [Unreleased] - 2026-08-18
 
 ### Added
 - Application-level regression coverage for INI generation, import, reset, validation, and calculation safeguards
 
 ### Changed
 - Release workflow now builds the executable into the project root for easier distribution
-- Documentation and project status now reflect the current GPL-3.0 release configuration
+- README, contributing guidance, and project status now reflect the current GPL-3.0 release configuration
 
 ### Fixed
 - Hardened INI import for Ark files with duplicate options and literal percent values
