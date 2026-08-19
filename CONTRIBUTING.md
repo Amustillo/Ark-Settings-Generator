@@ -189,6 +189,19 @@ For each numbered release:
 4. Run the full test suite and build the executable
 5. Commit the synchronized release metadata and push it to the release branch
 
+## Change Synchronization Workflow
+
+For every feature, bug fix, configuration change, or release, identify all affected project surfaces before editing. Update only the surfaces that correspond to the change, but keep each affected surface synchronized:
+
+1. Update the owning implementation in `source/`.
+2. Add or update focused regression tests in `tests/`.
+3. Update `README.md` for user-facing behavior, `CHANGELOG.md` for the change record, and `PROJECT_STATUS.md` for current status or version changes.
+4. Update `Game.ini` or `GameUserSettings.ini` when sample configuration or defaults change.
+5. Update `source/requirements.txt` and `.github/workflows/` when dependencies or build behavior change.
+6. Search tracked files for stale version numbers, feature names, paths, and configuration keys.
+7. Run `pytest tests -v`, run the PyInstaller build for release or build changes, run `git diff --check`, and review `git status` before committing.
+8. Commit related implementation, tests, documentation, metadata, and workflow changes together, then push after validation when requested.
+
 ## Recognition
 
 Contributors who make significant improvements will be recognized in:
