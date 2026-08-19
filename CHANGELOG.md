@@ -143,13 +143,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Application-level regression coverage for INI generation, import, reset, validation, and calculation safeguards
+
+### Changed
+- Release workflow now builds the executable into the project root for easier distribution
+- Documentation and project status now reflect the current GPL-3.0 release configuration
+
 ### Fixed
 - Hardened INI import for Ark files with duplicate options and literal percent values
 - Invalid imported numeric and boolean values are now skipped with a warning
 - Import flow now clearly labels the required file order and rejects reversed files
 - Zero and negative calculation multipliers no longer crash the application
 - Imports reset omitted settings to defaults instead of retaining stale session values
-- Added coverage for application-level INI generation
 - Standardized executable output to the project root
 - Removed generated build artifacts and caches from the release workspace
 
