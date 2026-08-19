@@ -159,9 +159,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Standardized executable output to the project root
 - Removed generated build artifacts and caches from the release workspace
 
-## [Unreleased]
-
-### Planned Features
+## Planned Features
 - Profile saving/loading
 - Server presets (PvE/PvP templates)
 - More dino types for calculations
