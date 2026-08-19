@@ -2,14 +2,14 @@
 Version information for Ark Settings Generator
 """
 
-__version__ = "1.1.0"
+__version__ = "1.1.1"
 __author__ = "Amustillo"
 __description__ = "A modern GUI application to generate Ark Survival Ascended server configuration files"
 __license__ = "GPL-3.0"
 __url__ = "https://github.com/Amustillo/Ark-Settings-Generator"
 
 # Version tuple for comparisons
-VERSION_INFO = (1, 1, 0)
+VERSION_INFO = (1, 1, 1)
 
 def get_version_string():
     """Return formatted version string"""

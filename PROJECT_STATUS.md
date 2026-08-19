@@ -1,4 +1,4 @@
-# Ark Settings Generator - Project Status v1.1.0
+# Ark Settings Generator - Project Status v1.1.1
 
 ## ✅ Project Cleanup & Organization Complete
 
@@ -18,8 +18,8 @@ ignored local files; only source and release metadata are intended for GitHub.
 - `tests/` - Test suite
 
 ### Source Folder - VERIFIED
-- `main.py` - Application (1,788 lines, production-ready with v1.1.0 features)
-- `version.py` - Version info (v1.1.0)
+- `main.py` - Application (1,788 lines, production-ready with v1.1.1 features)
+- `version.py` - Version info (v1.1.1)
 - `requirements.txt` - Dependencies (pyinstaller≥6.0)
 - `ArkSettingsGenerator.spec` - PyInstaller configuration
 - `icon.ico` - T-Rex dinosaur icon (multi-resolution)
@@ -32,7 +32,7 @@ ignored local files; only source and release metadata are intended for GitHub.
 - ✅ Duplicate executable artifacts removed; the release executable is kept in the root folder
 - ✅ Source code optimized and documented
 - ✅ .gitignore properly configured
-- ✅ README.md updated with v1.1.0 features
+- ✅ README.md updated with v1.1.1 features
 - ✅ CHANGELOG.md updated with complete feature list
 - ✅ Ready for GitHub upload (final state)
 
@@ -43,7 +43,7 @@ ignored local files; only source and release metadata are intended for GitHub.
 - **Multi-Resolution**: 16x16, 32x32, 64x64, 128x128, 256x256
 - **Status**: Production-ready, embedded in executable
 
-## 🎉 Latest Features (v1.1.0)
+## 🎉 Latest Features (v1.1.1)
 - ✅ **Enhanced Tab Interface** - Selected tabs larger (font 13), unselected smaller (font 9)
 - ✅ **Decimal Thousands Display** - All sliders AND entry boxes show 3-decimal precision (e.g., "1.000")
   - Slider labels display formatted values
@@ -66,7 +66,7 @@ ignored local files; only source and release metadata are intended for GitHub.
 
 ## 📋 Documentation Status
 - ✅ README.md - Complete with features, usage, tips, and events documentation
-- ✅ CHANGELOG.md - v1.0.3 release notes with EXE file location fix
+- ✅ CHANGELOG.md - v1.1.1 release notes with configuration hardening fixes
 - ✅ PROJECT_STATUS.md - This file, current project overview
 - ✅ CONTRIBUTING.md - Development guide
 - ✅ LICENSE - GPL-3.0 open source
@@ -114,7 +114,7 @@ Ark Settings Generator/
 
 ---
 **Status**: ✅ PRODUCTION READY
-**Version**: 1.1.0
+**Version**: 1.1.1
 **Date**: August 18, 2026
 **Creator**: Amustillo
 **License**: GPL-3.0

@@ -141,7 +141,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GPL-3.0 License
 - Comprehensive README documentation
 
-## [Unreleased] - 2026-08-18
+## [1.1.1] - 2026-08-18
 
 ### Added
 - Application-level regression coverage for INI generation, import, reset, validation, and calculation safeguards
@@ -158,6 +158,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Imports reset omitted settings to defaults instead of retaining stale session values
 - Standardized executable output to the project root
 - Removed generated build artifacts and caches from the release workspace
+
+## [Unreleased]
 
 ### Planned Features
 - Profile saving/loading

@@ -179,6 +179,16 @@ Examples:
 5. Ensure code follows our style guidelines
 6. Create the Pull Request with a clear description
 
+## Release Workflow
+
+For each numbered release:
+
+1. Update `__version__` and `VERSION_INFO` in `source/version.py`
+2. Move the completed `CHANGELOG.md` entries from `Unreleased` into a dated version section
+3. Update the current version references in `PROJECT_STATUS.md`
+4. Run the full test suite and build the executable
+5. Commit the synchronized release metadata and push it to the release branch
+
 ## Recognition
 
 Contributors who make significant improvements will be recognized in:
