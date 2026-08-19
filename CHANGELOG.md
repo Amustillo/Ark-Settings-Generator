@@ -138,13 +138,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - tkinter GUI framework
 - configparser for INI file management
 - PyInstaller support for standalone executable
-- MIT License (open source)
+- GPL-3.0 License
 - Comprehensive README documentation
 
 ## [Unreleased]
 
+### Fixed
+- Hardened INI import for Ark files with duplicate options and literal percent values
+- Invalid imported numeric and boolean values are now skipped with a warning
+- Import flow now clearly labels the required file order and rejects reversed files
+- Zero and negative calculation multipliers no longer crash the application
+- Imports reset omitted settings to defaults instead of retaining stale session values
+- Added coverage for application-level INI generation
+- Standardized executable output to the project root
+- Removed generated build artifacts and caches from the release workspace
+
 ### Planned Features
-- Configuration import (read existing INI files)
 - Profile saving/loading
 - Server presets (PvE/PvP templates)
 - More dino types for calculations

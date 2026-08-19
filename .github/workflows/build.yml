@@ -35,42 +35,23 @@ jobs:
     - name: Build executable with PyInstaller
       run: |
         cd source
-        python -m PyInstaller --clean --noconfirm ArkSettingsGenerator.spec
+        python -m PyInstaller --clean --noconfirm --distpath .. ArkSettingsGenerator.spec
     
     - name: List build output
       run: |
-        dir source\dist
+        dir ArkSettingsGenerator.exe
     
     - name: Upload artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ArkSettingsGenerator-executable
-        path: source/dist/ArkSettingsGenerator.exe
+        path: ArkSettingsGenerator.exe
     
-    - name: Create Release
-      id: create_release
+    - name: Create GitHub release
       if: startsWith(github.ref, 'refs/tags/')
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: softprops/action-gh-release@v2
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        body: |
-          See CHANGELOG.md for details.
-        draft: false
-        prerelease: false
-    
-    - name: Upload asset to Release
-      if: startsWith(github.ref, 'refs/tags/')
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./source/dist/ArkSettingsGenerator.exe
-        asset_name: ArkSettingsGenerator.exe
-        asset_content_type: application/octet-stream
+        files: ArkSettingsGenerator.exe
 
   test:
     runs-on: windows-latest
@@ -90,7 +71,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pytest configparser
+        pip install pytest
     
     - name: Run tests
       run: |

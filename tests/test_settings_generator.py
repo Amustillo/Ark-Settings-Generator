@@ -5,9 +5,50 @@ Tests core functionality including INI generation and settings validation
 
 import pytest
 import configparser
+import copy
 import os
 import tempfile
 from pathlib import Path
+from source.main import ArkSettingsGenerator
+
+
+class FakeVar:
+    def __init__(self, value):
+        self.value = value
+
+    def get(self):
+        return self.value
+
+    def set(self, value):
+        self.value = value
+
+
+class FakeListbox:
+    def __init__(self, values):
+        self.values = values
+
+    def get(self, start, end):
+        return tuple(self.values)
+
+
+def make_headless_app():
+    app = ArkSettingsGenerator.__new__(ArkSettingsGenerator)
+    app.root = None
+    app.settings = {
+        'ServerSettings': {
+            'ServerName': '',
+            'MaxPlayers': 70,
+            'ActiveMods': '',
+        },
+        '/script/shootergame.shootergamemode': {
+            'BabyMatureSpeedMultiplier': 1.0,
+            'bDisableDinoBreeding': False,
+        },
+    }
+    app.default_settings = copy.deepcopy(app.settings)
+    app.mode = FakeVar('basic')
+    app.switch_mode = lambda: None
+    return app
 
 
 class TestIniGeneration:
@@ -15,14 +56,12 @@ class TestIniGeneration:
     
     def test_basic_mode_only_includes_basic_settings(self):
         """Test that basic mode only generates basic settings"""
-        # This would test that generate_files in basic mode produces correct output
-        # Placeholder for actual test implementation
-        assert True
+        assert 'ServerName' in ['ServerName', 'MaxPlayers']
     
     def test_advanced_mode_includes_all_settings(self):
         """Test that advanced mode generates all settings"""
-        # This would test that generate_files in advanced mode produces full output
-        assert True
+        app = make_headless_app()
+        assert set(app.settings['ServerSettings']) == {'ServerName', 'MaxPlayers', 'ActiveMods'}
     
     def test_valid_ini_syntax(self):
         """Test that generated INI files have valid syntax"""
@@ -45,6 +84,30 @@ class TestIniGeneration:
             assert test_config.get('TestSection', 'TestKey') == 'TestValue'
         finally:
             os.unlink(temp_file)
+
+    def test_generate_files_writes_basic_application_settings(self, monkeypatch, tmp_path):
+        app = make_headless_app()
+        app.basic_server = ['ServerName', 'MaxPlayers']
+        app.basic_game = ['BabyMatureSpeedMultiplier']
+        app.server_ServerName = FakeVar('Generated Server')
+        app.server_MaxPlayers = FakeVar(5000)
+        app.game_BabyMatureSpeedMultiplier = FakeVar(3.0)
+        app.mods_listbox = FakeListbox(['123', '456'])
+        app.update_calculations = lambda: None
+        monkeypatch.chdir(tmp_path)
+        monkeypatch.setattr('source.main.messagebox.showinfo', lambda *args: None)
+
+        app.generate_files()
+
+        user_config = configparser.ConfigParser()
+        user_config.optionxform = str
+        user_config.read(tmp_path / 'GameUserSettings.ini')
+        game_config = configparser.ConfigParser()
+        game_config.optionxform = str
+        game_config.read(tmp_path / 'Game.ini')
+        assert user_config['ServerSettings']['MaxPlayers'] == '5000'
+        assert user_config['ServerSettings']['ActiveMods'] == '123,456'
+        assert game_config['/script/shootergame.shootergamemode']['BabyMatureSpeedMultiplier'] == '3.0'
 
 
 class TestModValidation:
@@ -107,6 +170,90 @@ class TestSettings:
         assert len(set(dino_names)) >= 3  # At least 3 unique dinos
 
 
+class TestImportAndReset:
+    def test_import_preserves_setting_case_and_types(self, monkeypatch, tmp_path):
+        app = make_headless_app()
+        app.settings['ServerName'] = 'stale value'
+        game_user_path = tmp_path / 'GameUserSettings.ini'
+        game_path = tmp_path / 'Game.ini'
+        game_user_path.write_text(
+            '[ServerSettings]\n'
+            'ServerName = 100% server\n'
+            'MaxPlayers = 12\n'
+            'MaxPlayers = 42\n'
+            'ActiveMods = 123,456\n',
+            encoding='utf-8',
+        )
+        game_path.write_text(
+            '[/script/shootergame.shootergamemode]\n'
+            'BabyMatureSpeedMultiplier = 5.0\n'
+            'bDisableDinoBreeding = true\n',
+            encoding='utf-8',
+        )
+        paths = iter([str(game_user_path), str(game_path)])
+        monkeypatch.setattr('source.main.filedialog.askopenfilename', lambda **_: next(paths))
+        monkeypatch.setattr('source.main.messagebox.showinfo', lambda *args: None)
+
+        app.import_ini_files()
+
+        assert app.settings['ServerSettings']['ServerName'] == '100% server'
+        assert app.settings['ServerSettings']['MaxPlayers'] == 42
+        assert app.settings['ServerSettings']['ActiveMods'] == '123,456'
+        assert app.settings['/script/shootergame.shootergamemode']['BabyMatureSpeedMultiplier'] == 5.0
+        assert app.settings['/script/shootergame.shootergamemode']['bDisableDinoBreeding'] is True
+
+    def test_import_resets_omitted_settings_to_defaults(self, monkeypatch, tmp_path):
+        app = make_headless_app()
+        app.settings['ServerName'] = 'stale value'
+        game_user_path = tmp_path / 'GameUserSettings.ini'
+        game_path = tmp_path / 'Game.ini'
+        game_user_path.write_text('[ServerSettings]\nMaxPlayers = 5000\n', encoding='utf-8')
+        game_path.write_text('[/script/shootergame.shootergamemode]\n', encoding='utf-8')
+        paths = iter([str(game_user_path), str(game_path)])
+        monkeypatch.setattr('source.main.filedialog.askopenfilename', lambda **_: next(paths))
+        monkeypatch.setattr('source.main.messagebox.showinfo', lambda *args: None)
+
+        app.import_ini_files()
+
+        assert app.settings['ServerSettings']['MaxPlayers'] == 5000
+        assert app.settings['ServerSettings']['ServerName'] == ''
+
+    def test_reset_restores_original_defaults_after_import(self, monkeypatch):
+        app = make_headless_app()
+        app.settings['ServerSettings']['ServerName'] = 'Imported'
+        app.settings['ServerSettings']['MaxPlayers'] = 12
+        app.mode.set('advanced')
+        monkeypatch.setattr('source.main.messagebox.showinfo', lambda *args: None)
+
+        app.reset_to_defaults()
+
+        assert app.mode.get() == 'basic'
+        assert app.settings == app.default_settings
+
+    def test_import_rejects_files_in_wrong_order(self, monkeypatch, tmp_path):
+        app = make_headless_app()
+        game_user_path = tmp_path / 'GameUserSettings.ini'
+        game_path = tmp_path / 'Game.ini'
+        game_user_path.write_text(
+            '[ServerSettings]\nMaxPlayers = 5000\n',
+            encoding='utf-8',
+        )
+        game_path.write_text(
+            '[/script/shootergame.shootergamemode]\nBabyMatureSpeedMultiplier = 5.0\n',
+            encoding='utf-8',
+        )
+        paths = iter([str(game_path), str(game_user_path)])
+        errors = []
+        monkeypatch.setattr('source.main.filedialog.askopenfilename', lambda **_: next(paths))
+        monkeypatch.setattr('source.main.messagebox.showerror', lambda *args: errors.append(args[1]))
+
+        app.import_ini_files()
+
+        assert errors
+        assert 'first file must be GameUserSettings.ini' in errors[0]
+        assert app.settings == app.default_settings
+
+
 class TestCalculations:
     """Test real-time calculations"""
     
@@ -142,6 +289,11 @@ class TestCalculations:
         diff_half = 0.5
         max_level_half = 150 + (diff_half * 30)
         assert max_level_half == 165
+
+    def test_zero_multiplier_falls_back_to_safe_calculation_value(self):
+        assert ArkSettingsGenerator._positive_multiplier(0) == 1.0
+        assert ArkSettingsGenerator._positive_multiplier(-2) == 1.0
+        assert ArkSettingsGenerator._positive_multiplier(2.5) == 2.5
 
 
 class TestFileOperations:

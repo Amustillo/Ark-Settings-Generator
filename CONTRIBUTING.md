@@ -66,7 +66,8 @@ Enhancement suggestions are tracked as GitHub issues. When creating an enhanceme
    ```bash
    cd source
    pip install -r requirements.txt
-   pip install pillow pytest
+   cd ..
+    pip install pytest
    ```
 
 5. **Create a new branch** for your changes:
@@ -78,13 +79,14 @@ Enhancement suggestions are tracked as GitHub issues. When creating an enhanceme
 
 7. **Run tests**:
    ```bash
-   pytest tests/ -v
+   pytest tests -v
    ```
 
 8. **Build and test the executable**:
    ```bash
-   python -m PyInstaller --clean --noconfirm ArkSettingsGenerator.spec
-   # Test the executable in source/dist/ArkSettingsGenerator.exe
+   cd source
+   python -m PyInstaller --clean --noconfirm --distpath .. ArkSettingsGenerator.spec
+   # Test the executable in ArkSettingsGenerator.exe
    ```
 
 9. **Commit your changes**:

@@ -100,13 +100,13 @@ python main.py
 To import your existing server settings:
 
 1. Click the **"📂 Import INI Files"** button at the top
-2. Select your existing **GameUserSettings.ini** file
-3. Select your existing **Game.ini** file
+2. **Step 1**: Select your existing **GameUserSettings.ini** file (server settings)
+3. **Step 2**: Select your existing **Game.ini** file (game settings)
 4. All settings will automatically populate in the interface
 5. Make any additional changes as needed
 6. Generate updated INI files
 
-**Note**: The import feature intelligently converts all setting types (booleans, integers, floats, strings) and preserves your existing mod list.
+**Note**: Select the files in the displayed order. The importer checks each file's section and will explain if the wrong file is selected. It converts all setting types (booleans, integers, floats, strings) and preserves your existing mod list.
 
 ### Using Server Events
 
@@ -154,12 +154,17 @@ Ark Settings Generator/
 ├── Game.ini                    # Generated output (excluded from git)
 ├── GameUserSettings.ini        # Generated output (excluded from git)
 ├── README.md                   # This documentation
+├── CHANGELOG.md                # Version history
+├── CONTRIBUTING.md             # Contributor guide
+├── LICENSE                     # GPL-3.0 license
+├── tests/                      # Automated tests
+│   └── test_settings_generator.py
 └── source/                     # Source code
-    ├── main.py                 # Main application (1500+ lines)
-    ├── requirements.txt        # Python dependencies
+  ├── main.py                 # Main application
+  ├── version.py              # Version metadata
+  ├── requirements.txt        # Build dependencies
     ├── ArkSettingsGenerator.spec # PyInstaller build config
-    └── dist/                   # Build output directory
-        └── ArkSettingsGenerator.exe
+    └── icon.ico                # Application icon
 ```
 
 ## For Developers
@@ -202,10 +207,10 @@ python main.py
 
 ```bash
 cd source
-python -m PyInstaller --clean --noconfirm ArkSettingsGenerator.spec
+python -m PyInstaller --clean --noconfirm --distpath .. ArkSettingsGenerator.spec
 ```
 
-The executable will be created in `source/dist/ArkSettingsGenerator.exe`
+The executable will be created in the project root as `ArkSettingsGenerator.exe`.
 
 ### Code Structure
 
@@ -253,9 +258,7 @@ Contributions are welcome! Please feel free to submit pull requests or open issu
 
 This project is licensed under the GNU General Public License v3.0 (GPL-3.0).
 
-**Important**: This software is provided free of charge and for non-commercial use only. Commercial use, redistribution for profit, or sale of this software is strictly prohibited.
-
-For more details, see the [LICENSE](LICENSE) file.
+This project is distributed under the GPL-3.0 license. See the [LICENSE](LICENSE) file for the full terms.
 
 ## Author
 

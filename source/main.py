@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import copy
 import tkinter as tk
 from tkinter import ttk, messagebox, filedialog
 import configparser
@@ -215,7 +216,6 @@ class ArkSettingsGenerator:
                 'globalVoiceChat': False,
                 'proximityChat': False,
                 'ShowMapPlayerLocation': False,
-                'serverForceNoHud': False,
                 'AllowFlyerCarryPvE': False,
                 'RandomSupplyCratePoints': False,
                 'SupplyCrateLootQualityMultiplier': 1.0,
@@ -226,7 +226,6 @@ class ArkSettingsGenerator:
                 'ActiveMods': '',
                 'AllowAnyoneBabyImprintCuddle': True,
                 'AlwaysAllowStructurePickup': False,
-                'AlwaysNotifyPlayerLeft': False,
                 'ArmadoggoDeathCooldown': 3600,
                 'AutoDestroyDecayedDinos': False,
                 'AutoDestroyOldStructuresMultiplier': 0.0,
@@ -431,6 +430,8 @@ class ArkSettingsGenerator:
             }
         }
 
+        self.default_settings = copy.deepcopy(self.settings)
+
         # Descriptions for settings
         self.descriptions = {
             'DifficultyOffset': 'Base difficulty level (0.0-1.0+); higher increases dino levels and aggression.',
@@ -487,7 +488,6 @@ class ArkSettingsGenerator:
             'globalVoiceChat': 'Makes voice chat global.',
             'proximityChat': 'Limits chat to nearby players.',
             'ShowMapPlayerLocation': 'Shows player locations on map.',
-            'serverForceNoHud': 'Forces HUD off.',
             'AllowFlyerCarryPvE': 'Allows flyers to carry dinos/players in PvE.',
             'RandomSupplyCratePoints': 'Randomizes supply crate locations.',
             'SupplyCrateLootQualityMultiplier': 'Loot quality in crates (>1.0 improves).',
@@ -857,9 +857,9 @@ class ArkSettingsGenerator:
         self.generate_btn.pack(side=tk.LEFT, padx=10)
         
         self.import_btn = ttk.Button(button_frame, 
-                                     text="📂 Import INI Files", 
+                                     text="📂 Import INI Files (2 Steps)",
                                      command=self.import_ini_files,
-                                     width=22)
+                                     width=26)
         self.import_btn.pack(side=tk.LEFT, padx=10)
         
         self.reset_btn = ttk.Button(button_frame, 
@@ -993,6 +993,14 @@ class ArkSettingsGenerator:
         
         self.root.bind('<Configure>', throttle_window_updates)
 
+    @staticmethod
+    def _positive_multiplier(value):
+        try:
+            value = float(value)
+        except (TypeError, ValueError):
+            return 1.0
+        return value if value > 0 else 1.0
+
     def update_calculations(self):
         # Get current values (use default if variable doesn't exist yet)
         taming_mult = getattr(self, 'server_TamingSpeedMultiplier', None)
@@ -1000,30 +1008,35 @@ class ArkSettingsGenerator:
             taming_mult = 1.0
         else:
             taming_mult = taming_mult.get()
+        taming_mult = self._positive_multiplier(taming_mult)
 
         maturation_mult = getattr(self, 'game_BabyMatureSpeedMultiplier', None)
         if maturation_mult is None:
             maturation_mult = 1.0
         else:
             maturation_mult = maturation_mult.get()
+        maturation_mult = self._positive_multiplier(maturation_mult)
 
         imprint_mult = getattr(self, 'game_BabyImprintingStatScaleMultiplier', None)
         if imprint_mult is None:
             imprint_mult = 1.0
         else:
             imprint_mult = imprint_mult.get()
+        imprint_mult = self._positive_multiplier(imprint_mult)
 
         hatch_mult = getattr(self, 'game_EggHatchSpeedMultiplier', None)
         if hatch_mult is None:
             hatch_mult = 1.0
         else:
             hatch_mult = hatch_mult.get()
+        hatch_mult = self._positive_multiplier(hatch_mult)
 
         mating_mult = getattr(self, 'game_MatingIntervalMultiplier', None)
         if mating_mult is None:
             mating_mult = 1.0
         else:
             mating_mult = mating_mult.get()
+        mating_mult = self._positive_multiplier(mating_mult)
 
         # Get selected dino data
         dino_name = self.selected_dino.get()
@@ -1095,12 +1108,43 @@ class ArkSettingsGenerator:
             return True
         except ValueError:
             return False
+
+    def _import_ini_section(self, config, section, target_settings):
+        """Import one INI section while preserving supported setting types."""
+        invalid_keys = []
+        if section not in config:
+            return invalid_keys
+
+        known_keys = {key.lower(): key for key in target_settings}
+        for key, value in config[section].items():
+            setting_key = known_keys.get(key.lower())
+            if setting_key is None:
+                continue
+
+            default_value = target_settings[setting_key]
+            try:
+                if isinstance(default_value, bool):
+                    normalized_value = value.strip().lower()
+                    if normalized_value not in {'true', 'false', '1', '0', 'yes', 'no'}:
+                        raise ValueError
+                    target_settings[setting_key] = normalized_value in {'true', '1', 'yes'}
+                elif isinstance(default_value, int):
+                    target_settings[setting_key] = int(value.strip())
+                elif isinstance(default_value, float):
+                    target_settings[setting_key] = float(value.strip())
+                else:
+                    target_settings[setting_key] = value.strip()
+            except ValueError:
+                invalid_keys.append(key)
+
+        return invalid_keys
     
     def import_ini_files(self):
         """Import existing INI files to populate settings"""
         # Ask user to select GameUserSettings.ini
         game_user_path = filedialog.askopenfilename(
-            title="Select GameUserSettings.ini",
+            parent=self.root,
+            title="Step 1 of 2: Select GameUserSettings.ini (server settings)",
             filetypes=[("INI files", "*.ini"), ("All files", "*.*")]
         )
         
@@ -1109,7 +1153,8 @@ class ArkSettingsGenerator:
         
         # Ask user to select Game.ini
         game_path = filedialog.askopenfilename(
-            title="Select Game.ini",
+            parent=self.root,
+            title="Step 2 of 2: Select Game.ini (game settings)",
             filetypes=[("INI files", "*.ini"), ("All files", "*.*")]
         )
         
@@ -1118,68 +1163,52 @@ class ArkSettingsGenerator:
         
         try:
             # Parse GameUserSettings.ini
-            config1 = configparser.ConfigParser()
-            config1.read(game_user_path)
-            
-            if 'ServerSettings' in config1:
-                for key, value in config1['ServerSettings'].items():
-                    if key in self.settings['ServerSettings']:
-                        # Convert to appropriate type
-                        default_value = self.settings['ServerSettings'][key]
-                        if isinstance(default_value, bool):
-                            self.settings['ServerSettings'][key] = value.lower() in ['true', '1', 'yes']
-                        elif isinstance(default_value, int):
-                            try:
-                                self.settings['ServerSettings'][key] = int(value)
-                            except:
-                                pass
-                        elif isinstance(default_value, float):
-                            try:
-                                self.settings['ServerSettings'][key] = float(value)
-                            except:
-                                pass
-                        else:
-                            self.settings['ServerSettings'][key] = value
+            config1 = configparser.ConfigParser(strict=False, interpolation=None)
+            config1.optionxform = str
+            if not config1.read(game_user_path):
+                raise FileNotFoundError(f"Could not read {game_user_path}")
+            if 'ServerSettings' not in config1:
+                raise ValueError(
+                    "The first file must be GameUserSettings.ini and contain a [ServerSettings] section."
+                )
             
             # Parse Game.ini
-            config2 = configparser.ConfigParser()
-            config2.read(game_path)
-            
-            if '/script/shootergame.shootergamemode' in config2:
-                for key, value in config2['/script/shootergame.shootergamemode'].items():
-                    if key in self.settings['/script/shootergame.shootergamemode']:
-                        # Convert to appropriate type
-                        default_value = self.settings['/script/shootergame.shootergamemode'][key]
-                        if isinstance(default_value, bool):
-                            self.settings['/script/shootergame.shootergamemode'][key] = value.lower() in ['true', '1', 'yes']
-                        elif isinstance(default_value, int):
-                            try:
-                                self.settings['/script/shootergame.shootergamemode'][key] = int(value)
-                            except:
-                                pass
-                        elif isinstance(default_value, float):
-                            try:
-                                self.settings['/script/shootergame.shootergamemode'][key] = float(value)
-                            except:
-                                pass
-                        else:
-                            self.settings['/script/shootergame.shootergamemode'][key] = value
-            
-            # Update GUI with imported values
-            for section, settings in self.settings.items():
-                prefix = 'server_' if section == 'ServerSettings' else 'game_'
-                for key, value in settings.items():
-                    var_name = f'{prefix}{key}'
-                    if hasattr(self, var_name):
-                        var = getattr(self, var_name)
-                        if hasattr(var, 'set'):
-                            var.set(value)
+            config2 = configparser.ConfigParser(strict=False, interpolation=None)
+            config2.optionxform = str
+            if not config2.read(game_path):
+                raise FileNotFoundError(f"Could not read {game_path}")
+            if '/script/shootergame.shootergamemode' not in config2:
+                raise ValueError(
+                    "The second file must be Game.ini and contain the shootergamemode section."
+                )
+
+            self.settings = copy.deepcopy(self.default_settings)
+
+            invalid_keys = self._import_ini_section(
+                config1,
+                'ServerSettings',
+                self.settings['ServerSettings'],
+            )
+            invalid_keys.extend(self._import_ini_section(
+                config2,
+                '/script/shootergame.shootergamemode',
+                self.settings['/script/shootergame.shootergamemode'],
+            ))
+
+            self.switch_mode()
             
             # Load mods if present
             if hasattr(self, 'mods_listbox'):
                 self.load_mods_to_listbox()
             
-            messagebox.showinfo("Success", "INI files imported successfully!")
+            if invalid_keys:
+                messagebox.showwarning(
+                    "Import Warning",
+                    "Imported files successfully, but these values were invalid and were skipped:\n"
+                    + ", ".join(invalid_keys),
+                )
+            else:
+                messagebox.showinfo("Success", "INI files imported successfully!")
             
         except Exception as e:
             messagebox.showerror("Error", f"Failed to import INI files: {str(e)}")
@@ -1825,6 +1854,7 @@ class ArkSettingsGenerator:
     def reset_to_defaults(self):
         # Reset mode to basic
         self.mode.set('basic')
+        self.settings = copy.deepcopy(self.default_settings)
         # Reset GUI controls to default values
         for section, settings in self.settings.items():
             prefix = 'server_' if section == 'ServerSettings' else 'game_'

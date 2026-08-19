@@ -3,36 +3,33 @@
 ## ✅ Project Cleanup & Organization Complete
 
 ### Root Folder - CLEANED
-**Removed:**
-- `create_icon_v2.py` - Duplicate/old version
-- `Game.ini` - Old sample file
-- `GameUserSettings.ini` - Old sample file  
-- `FINAL_VALIDATION_REPORT.md` - Temporary validation file
+Generated build and cache directories are removed from the working tree. The local
+`Game.ini`, `GameUserSettings.ini`, `.venv/`, and root executable are intentionally
+ignored local files; only source and release metadata are intended for GitHub.
 
 **Kept:**
 - `ArkSettingsGenerator.exe` - Built executable (generated from PyInstaller)
 - `README.md` - Complete project documentation
 - `CHANGELOG.md` - Version history and features
 - `CONTRIBUTING.md` - Developer guidelines
-- `LICENSE` - MIT license
+- `LICENSE` - GPL-3.0 license
 - `.github/workflows/build.yml` - CI/CD pipeline
 - `source/` - Core application files
 - `tests/` - Test suite
 
 ### Source Folder - VERIFIED
-- `main.py` - Application (1,789 lines, production-ready with v1.1.0 features)
+- `main.py` - Application (1,788 lines, production-ready with v1.1.0 features)
 - `version.py` - Version info (v1.1.0)
 - `requirements.txt` - Dependencies (pyinstaller≥6.0)
 - `ArkSettingsGenerator.spec` - PyInstaller configuration
 - `icon.ico` - T-Rex dinosaur icon (multi-resolution)
 
 ### Tests Folder - VERIFIED
-- `test_settings_generator.py` - 12 comprehensive test cases (100% passing)
+- `test_settings_generator.py` - 18 automated test cases (100% passing)
 
 ### Git Repository
-- ✅ Multiple commits with feature development
-- ✅ All essential files staged and committed
-- ✅ Build artifacts cleaned (build/, dist/, create_icon.py removed)
+- ✅ Source, tests, documentation, and CI files are tracked for GitHub
+- ✅ Duplicate executable artifacts removed; the release executable is kept in the root folder
 - ✅ Source code optimized and documented
 - ✅ .gitignore properly configured
 - ✅ README.md updated with v1.1.0 features
@@ -72,17 +69,13 @@
 - ✅ CHANGELOG.md - v1.0.3 release notes with EXE file location fix
 - ✅ PROJECT_STATUS.md - This file, current project overview
 - ✅ CONTRIBUTING.md - Development guide
-- ✅ LICENSE - MIT open source
+- ✅ LICENSE - GPL-3.0 open source
 - ✅ Inline code comments - Well documented
 
 ## 🧪 Testing Status
-- ✅ 12 pytest tests - All PASSED
-- Categories:
-  - INI generation (3 tests)
-  - Mod validation (2 tests)
-  - Settings (3 tests)
-  - Calculations (3 tests)
-  - File operations (1 test)
+- ✅ 18 pytest tests - All PASSED
+- Coverage includes INI parsing, import order validation, reset behavior,
+  settings validation, calculations, and file operations.
 
 ## 🚀 Deployment Ready
 - ✅ Executable built and tested
@@ -106,11 +99,10 @@ Ark Settings Generator/
 ├── tests/
 │   └── test_settings_generator.py   # Test suite
 ├── ArkSettingsGenerator.exe         # Executable
-├── create_icon.py                   # Icon generator
 ├── README.md                        # Documentation
 ├── CHANGELOG.md                     # Release notes
 ├── CONTRIBUTING.md                  # Dev guide
-├── LICENSE                          # MIT license
+├── LICENSE                          # GPL-3.0 license
 └── .gitignore                       # Git config
 ```
 
@@ -123,6 +115,6 @@ Ark Settings Generator/
 ---
 **Status**: ✅ PRODUCTION READY
 **Version**: 1.1.0
-**Date**: February 13, 2026
+**Date**: August 18, 2026
 **Creator**: Amustillo
-**License**: GPL-3.0 (Non-commercial)
+**License**: GPL-3.0
