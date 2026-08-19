@@ -12,6 +12,7 @@ ignored local files; only source and release metadata are intended for GitHub.
 - `README.md` - Complete project documentation
 - `CHANGELOG.md` - Version history and features
 - `CONTRIBUTING.md` - Developer guidelines
+- `.github/copilot-instructions.md` - Repository change workflow for coding agents
 - `LICENSE` - GPL-3.0 license
 - `.github/workflows/build.yml` - CI/CD pipeline
 - `source/` - Core application files
@@ -34,7 +35,8 @@ ignored local files; only source and release metadata are intended for GitHub.
 - ✅ .gitignore properly configured
 - ✅ README.md updated with v1.1.1 features
 - ✅ CHANGELOG.md updated with complete feature list
-- ✅ Ready for GitHub upload (final state)
+- ✅ Change synchronization workflow documented for contributors and coding agents
+- ✅ Ready for GitHub release (final state)
 
 ## 🎨 Icon System
 - **Source**: `source/icon.ico` - Permanent T-Rex dinosaur icon
@@ -89,6 +91,7 @@ ignored local files; only source and release metadata are intended for GitHub.
 ```
 Ark Settings Generator/
 ├── .github/
+│   ├── copilot-instructions.md      # Repository change workflow
 │   └── workflows/build.yml          # GitHub Actions CI/CD
 ├── source/
 │   ├── main.py                      # Main application
@@ -107,10 +110,9 @@ Ark Settings Generator/
 ```
 
 ## 🔄 Next Steps
-1. Push to GitHub: `git push origin main`
-2. Create release on GitHub with executable
-3. Watch CI/CD auto-build confirm success
-4. Share with Ark community!
+1. Create the GitHub release for `v1.1.1` with the built executable
+2. Watch CI/CD auto-build confirm success
+3. Share with the Ark community
 
 ---
 **Status**: ✅ PRODUCTION READY

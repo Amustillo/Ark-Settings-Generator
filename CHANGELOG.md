@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Release workflow now builds the executable into the project root for easier distribution
 - README, contributing guidance, and project status now reflect the current GPL-3.0 release configuration
+- Repository-wide change synchronization workflow is documented for contributors and coding agents
 
 ### Fixed
 - Hardened INI import for Ark files with duplicate options and literal percent values

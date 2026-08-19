@@ -150,6 +150,9 @@ The **ACTIVE EVENT** dropdown in Server Settings allows you to select from 18+ a
 ```
 Ark Settings Generator/
 ├── .gitignore                  # Git ignore file
+├── .github/
+│   ├── copilot-instructions.md  # Repository change workflow
+│   └── workflows/build.yml      # GitHub Actions CI/CD
 ├── ArkSettingsGenerator.exe    # Main executable (excluded from git)
 ├── Game.ini                    # Generated output (excluded from git)
 ├── GameUserSettings.ini        # Generated output (excluded from git)
@@ -168,6 +171,18 @@ Ark Settings Generator/
 ```
 
 ## For Developers
+
+### Change Synchronization Workflow
+
+Keep related project surfaces synchronized whenever behavior, configuration, dependencies, or release metadata changes:
+
+1. Update the owning code in `source/` and add focused regression coverage in `tests/`.
+2. Update `README.md`, `CHANGELOG.md`, and `PROJECT_STATUS.md` when user-facing behavior, change history, or project status is affected.
+3. Update sample INI files, dependencies, PyInstaller settings, or GitHub Actions only when the corresponding behavior changes.
+4. For numbered releases, update `__version__` and `VERSION_INFO` together and keep changelog releases newest first.
+5. Run `pytest tests -v`, build the executable for release or build changes, run `git diff --check`, and review `git status` before committing.
+
+The complete contributor checklist is in [CONTRIBUTING.md](CONTRIBUTING.md), and repository-level agent guidance is in [.github/copilot-instructions.md](.github/copilot-instructions.md).
 
 ### Prerequisites
 
